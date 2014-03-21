@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAqEtlksJJZEytkHsDay0/VwAAAAACAAAAAAAQZgAAAAEAACAAAAAnofGICF4gi3x10RER0jDkpz9qhxgpFhp9zQZbPCIVFwAAAAAOgAAAAAIAACAAAABD0lioX8r5GOPV0TKwhyBRSQU0mwIJ+9l62C3UAH/dcRAAAABkldwc9YmOpqY7zg2R+8fXQAAAAEAK/PER47sXE9gdEO7VGqfkfepaiQuLKyBDL/SJPUheSNTav3ri9FaRIi5HWK2q54XZiLb5E7d+KM3/W0BZRkg=</EncryptedPassword>
+    <PrivateKeyPath />
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="admin/.htaccess">
+      <publishTime>03/01/2012 14:40:46</publishTime>
+    </File>
+    <File Include="admin/admin.php">
+      <publishTime>02/19/2013 21:08:26</publishTime>
+    </File>
+    <File Include="admin/adminprocess.php">
+      <publishTime>03/01/2012 15:32:02</publishTime>
+    </File>
+    <File Include="forgotpass.php">
+      <publishTime>03/04/2012 17:15:42</publishTime>
+    </File>
+    <File Include="include/.htaccess">
+      <publishTime>03/01/2012 14:40:46</publishTime>
+    </File>
+    <File Include="include/constants.php">
+      <publishTime>03/20/2014 17:42:23</publishTime>
+    </File>
+    <File Include="include/content.php">
+      <publishTime>03/21/2014 15:23:05</publishTime>
+    </File>
+    <File Include="include/database.php">
+      <publishTime>03/20/2014 19:19:29</publishTime>
+    </File>
+    <File Include="include/footer.php">
+      <publishTime>03/21/2014 15:26:14</publishTime>
+    </File>
+    <File Include="include/form.php">
+      <publishTime>03/03/2012 09:49:36</publishTime>
+    </File>
+    <File Include="include/loginForm.php">
+      <publishTime>03/05/2012 14:30:10</publishTime>
+    </File>
+    <File Include="include/mailer.php">
+      <publishTime>03/05/2012 14:30:10</publishTime>
+    </File>
+    <File Include="include/meniu.php">
+      <publishTime>03/05/2012 14:30:10</publishTime>
+    </File>
+    <File Include="include/session.php">
+      <publishTime>03/04/2012 16:05:56</publishTime>
+    </File>
+    <File Include="include/styles.css">
+      <publishTime>03/04/2012 17:19:30</publishTime>
+    </File>
+    <File Include="index.php">
+      <publishTime>03/21/2014 15:34:15</publishTime>
+    </File>
+    <File Include="naujienos.txt">
+      <publishTime>03/05/2012 19:02:48</publishTime>
+    </File>
+    <File Include="operacija1.php">
+      <publishTime>02/19/2013 22:05:14</publishTime>
+    </File>
+    <File Include="operacija2.php">
+      <publishTime>02/19/2013 22:05:14</publishTime>
+    </File>
+    <File Include="operacija3.php">
+      <publishTime>02/19/2013 22:05:14</publishTime>
+    </File>
+    <File Include="pictures/.htaccess">
+      <publishTime>03/01/2012 14:40:48</publishTime>
+    </File>
+    <File Include="pictures/top.png">
+      <publishTime>03/04/2012 05:47:44</publishTime>
+    </File>
+    <File Include="prisijungimo_duomenys.txt">
+      <publishTime>03/01/2012 14:40:58</publishTime>
+    </File>
+    <File Include="process.php">
+      <publishTime>03/06/2012 14:43:30</publishTime>
+    </File>
+    <File Include="register.php">
+      <publishTime>02/19/2013 23:02:36</publishTime>
+    </File>
+    <File Include="useredit.php">
+      <publishTime>02/19/2013 23:05:32</publishTime>
+    </File>
+    <File Include="userinfo.php">
+      <publishTime>02/19/2013 23:19:34</publishTime>
+    </File>
+  </ItemGroup>
+</Project>
