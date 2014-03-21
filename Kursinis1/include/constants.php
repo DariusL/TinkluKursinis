@@ -45,13 +45,6 @@ define("USER_LEVEL", 1);
 define("GUEST_LEVEL", 0);
 
 /**
- * This boolean constant controls whether or
- * not the script keeps track of active users
- * and active guests who are visiting the site.
- */
-define("TRACK_VISITORS", true);
-
-/**
  * Timeout Constants - these constants refer to
  * the maximum amount of time (in minutes) after
  * their last page fresh that a user and guest

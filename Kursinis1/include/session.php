@@ -48,15 +48,7 @@ class Session {
         if (!$this->logged_in) {
             $this->username = $_SESSION['username'] = GUEST_NAME;
             $this->userlevel = GUEST_LEVEL;
-            $database->addActiveGuest($_SERVER['REMOTE_ADDR'], $this->time);
         }
-        /* Update users last active timestamp */ else {
-            $database->addActiveUser($this->username, $this->time);
-        }
-
-        /* Remove inactive visitors from database */
-        $database->removeInactiveUsers();
-        $database->removeInactiveGuests();
 
         /* Set referrer page */
         if (isset($_SESSION['url'])) {
@@ -166,8 +158,6 @@ class Session {
 
         /* Insert userid into database and update active users table */
         $database->updateUserField($this->username, "userid", $this->userid);
-        $database->addActiveUser($this->username, $this->time);
-        $database->removeActiveGuest($_SERVER['REMOTE_ADDR']);
 
         /**
          * This is the cool part: the user has requested that we remember that
@@ -210,13 +200,6 @@ class Session {
         /* Reflect fact that user has logged out */
         $this->logged_in = false;
 
-        /**
-         * Remove from active users table and add to
-         * active guests tables.
-         */
-        $database->removeActiveUser($this->username);
-        $database->addActiveGuest($_SERVER['REMOTE_ADDR'], $this->time);
-
         /* Set user level to guest */
         $this->username = GUEST_NAME;
         $this->userlevel = GUEST_LEVEL;
@@ -253,9 +236,6 @@ class Session {
             }
             /* Check if username is already in use */ else if ($database->usernameTaken($subuser)) {
                 $form->setError($field, "* Toks vartotojo vardas jau yra");
-            }
-            /* Check if username is banned */ else if ($database->usernameBanned($subuser)) {
-                $form->setError($field, "* Vartotojas užblokuotas");
             }
         }
 
