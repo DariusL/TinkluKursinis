@@ -107,7 +107,7 @@ class MySQLDB {
      * Returns true on success, false otherwise.
      */
     function addNewUser($id, $password, $first_name, $last_name) {
-        $q = "INSERT INTO ".TBL_USERS." VALUES ('$id', '$first_name', '$last_name', 1, '$password')";
+        $q = "INSERT INTO ".TBL_USERS." VALUES ('$id', '$first_name', '$last_name', 1, '$password', NULL)";
         return mysql_query($q, $this->connection);
     }
 

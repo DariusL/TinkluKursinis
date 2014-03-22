@@ -168,9 +168,6 @@ class Session {
         if ($sub_remember) {
             setcookie(CLMN_USERS_ID, $this->user_id, time() + COOKIE_EXPIRE, COOKIE_PATH);
             setcookie(CLMN_USERS_S_ID, $this->session_id, time() + COOKIE_EXPIRE, COOKIE_PATH);
-        }else{
-            setcookie(CLMN_USERS_ID, "", time() - COOKIE_EXPIRE, COOKIE_PATH);
-            setcookie(CLMN_USERS_S_ID, "", time() - COOKIE_EXPIRE, COOKIE_PATH);
         }
 
         /* Login completed successfully */
@@ -190,7 +187,7 @@ class Session {
          * so just negate what you added when creating the
          * cookie.
          */
-        if (isset($_COOKIE['cookname']) && isset($_COOKIE['cookid'])) {
+        if (isset($_COOKIE[CLMN_USERS_ID]) && isset($_COOKIE[CLMN_USERS_S_ID])) {
             setcookie(CLMN_USERS_ID, "", time() - COOKIE_EXPIRE, COOKIE_PATH);
             setcookie(CLMN_USERS_S_ID, "", time() - COOKIE_EXPIRE, COOKIE_PATH);
         }
@@ -217,7 +214,7 @@ class Session {
         global $database, $form, $mailer;  //The database, form and mailer object
 
         /* Username error checking */
-        $field = "user";  //Use field name for username
+        $field = "id";  //Use field name for username
         if (!$sub_id || strlen($sub_id = trim($sub_id)) == 0) {
             $form->setError($field, "* Vartotojas neįvestas");
         } else {
@@ -259,7 +256,7 @@ class Session {
              */
         }
 
-        $field = "first name"; 
+        $field = "first_name"; 
         if(!$sub_first || strlen($sub_first = trim($sub_first)) == 0){
             $form->setError($field, "* Neįvestas vardas");
         }else{
@@ -270,7 +267,7 @@ class Session {
             }
         }
         
-        $field = "last name"; 
+        $field = "last_ame"; 
         if(!$sub_last || strlen($sub_last = trim($sub_last)) == 0){
             $form->setError($field, "* Neįvestas vardas");
         }else{
@@ -286,7 +283,7 @@ class Session {
             return 1;  //Errors with form
         }
         /* No errors, add the new account to the */ else {
-            if ($database->addNewUser($sub_id, md5($subpass), $sub_first, $sub_last)) {
+            if ($database->addNewUser($sub_id, md5($sub_pass), $sub_first, $sub_last)) {
                 return 0;  //New user added succesfully
             } else {
                 return 2;  //Registration attempt failed

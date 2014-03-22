@@ -3,7 +3,7 @@ if (isset($form) && isset($session) && !$session->logged_in) {
     ?>   
     <form action="process.php" method="POST" class="login">              
         <center style="font-size:18pt;"><b>Prisijungimas</b></label></center>
-        <p style="text-align:left;">Vartotojo vardas:<br>
+        <p style="text-align:left;">Vartotojo numeris:<br>
             <input class ="s1" name="user" type="text" value="<? echo $form->value("user"); ?>"/><br>
             <? echo $form->error("user"); ?>
         </p>
@@ -22,8 +22,7 @@ if (isset($form) && isset($session) && !$session->logged_in) {
             Atsiminti   
         </p>
         <input type="hidden" name="sublogin" value="1"/>
-        <p>
-            <a href="forgotpass.php">Negalite prisijungti?</a>&nbsp;&nbsp;            
+        <p>       
             <a href="register.php">Registracija</a>
         </p>     
     </form>

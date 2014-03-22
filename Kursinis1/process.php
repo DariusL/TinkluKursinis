@@ -80,14 +80,14 @@ class Process {
         global $session, $form;
         /* Convert username to all lowercase (by option) */
         if (ALL_LOWERCASE) {
-            $_POST['user'] = strtolower($_POST['user']);
+            $_POST['id'] = strtolower($_POST['id']);
         }
         /* Registration attempt */
-        $retval = $session->register($_POST['user'], $_POST['pass'], $_POST['email']);
+        $retval = $session->register($_POST['id'], $_POST['pass'], $_POST['first_name'], $_POST['last_name']);
 
         /* Registration Successful */
         if ($retval == 0) {
-            $_SESSION['reguname'] = $_POST['user'];
+            $_SESSION['reguname'] = $_POST['id'];
             $_SESSION['regsuccess'] = true;
             header("Location: " . $session->referrer);
         }
@@ -97,7 +97,7 @@ class Process {
             header("Location: " . $session->referrer);
         }
         /* Registration attempt failed */ else if ($retval == 2) {
-            $_SESSION['reguname'] = $_POST['user'];
+            $_SESSION['reguname'] = $_POST['id'];
             $_SESSION['regsuccess'] = false;
             header("Location: " . $session->referrer);
         }
