@@ -5,18 +5,6 @@
     <PrivateKeyPath />
   </PropertyGroup>
   <ItemGroup>
-    <File Include="admin/.htaccess">
-      <publishTime>03/01/2012 14:40:46</publishTime>
-    </File>
-    <File Include="admin/admin.php">
-      <publishTime>02/19/2013 21:08:26</publishTime>
-    </File>
-    <File Include="admin/adminprocess.php">
-      <publishTime>03/01/2012 15:32:02</publishTime>
-    </File>
-    <File Include="forgotpass.php">
-      <publishTime>03/04/2012 17:15:42</publishTime>
-    </File>
     <File Include="include/.htaccess">
       <publishTime>03/01/2012 14:40:46</publishTime>
     </File>
@@ -38,12 +26,6 @@
     <File Include="include/loginForm.php">
       <publishTime>03/22/2014 13:49:11</publishTime>
     </File>
-    <File Include="include/mailer.php">
-      <publishTime>03/05/2012 14:30:10</publishTime>
-    </File>
-    <File Include="include/meniu.php">
-      <publishTime>03/05/2012 14:30:10</publishTime>
-    </File>
     <File Include="include/session.php">
       <publishTime>03/22/2014 16:04:32</publishTime>
     </File>
@@ -56,15 +38,6 @@
     <File Include="naujienos.txt">
       <publishTime>03/05/2012 19:02:48</publishTime>
     </File>
-    <File Include="operacija1.php">
-      <publishTime>02/19/2013 22:05:14</publishTime>
-    </File>
-    <File Include="operacija2.php">
-      <publishTime>02/19/2013 22:05:14</publishTime>
-    </File>
-    <File Include="operacija3.php">
-      <publishTime>02/19/2013 22:05:14</publishTime>
-    </File>
     <File Include="pictures/.htaccess">
       <publishTime>03/01/2012 14:40:48</publishTime>
     </File>
@@ -75,16 +48,10 @@
       <publishTime>03/01/2012 14:40:58</publishTime>
     </File>
     <File Include="process.php">
-      <publishTime>03/22/2014 15:51:09</publishTime>
+      <publishTime>03/22/2014 16:11:55</publishTime>
     </File>
     <File Include="register.php">
       <publishTime>03/22/2014 15:51:09</publishTime>
-    </File>
-    <File Include="useredit.php">
-      <publishTime>02/19/2013 23:05:32</publishTime>
-    </File>
-    <File Include="userinfo.php">
-      <publishTime>02/19/2013 23:19:34</publishTime>
     </File>
   </ItemGroup>
 </Project>

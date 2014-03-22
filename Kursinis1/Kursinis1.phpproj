@@ -26,34 +26,22 @@
     <IncludeDebugInformation>false</IncludeDebugInformation>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="admin\admin.php" />
-    <Compile Include="admin\adminprocess.php" />
-    <Compile Include="forgotpass.php" />
     <Compile Include="include\constants.php" />
     <Compile Include="include\content.php" />
     <Compile Include="include\database.php" />
     <Compile Include="include\footer.php" />
     <Compile Include="include\form.php" />
     <Compile Include="include\loginForm.php" />
-    <Compile Include="include\mailer.php" />
-    <Compile Include="include\meniu.php" />
     <Compile Include="include\session.php" />
     <Compile Include="index.php" />
-    <Compile Include="operacija1.php" />
-    <Compile Include="operacija2.php" />
-    <Compile Include="operacija3.php" />
     <Compile Include="process.php" />
     <Compile Include="register.php" />
-    <Compile Include="useredit.php" />
-    <Compile Include="userinfo.php" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="admin\" />
     <Folder Include="include\" />
     <Folder Include="pictures\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="admin\.htaccess" />
     <Content Include="include\.htaccess" />
     <Content Include="include\styles.css" />
     <Content Include="naujienos.txt" />
