@@ -36,6 +36,7 @@
     <Compile Include="index.php" />
     <Compile Include="process.php" />
     <Compile Include="register.php" />
+    <Compile Include="include\update.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="include\" />

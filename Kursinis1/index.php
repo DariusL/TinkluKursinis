@@ -1,5 +1,6 @@
 <?
 include("include/session.php");
+include("include/content.php");
 ?>
 <html>
 <head>
@@ -21,7 +22,12 @@ include("include/session.php");
                 <?
                 //Jei vartotojas prisijungęs
                 if ($session->logged_in) {
-                    include("include/content.php");
+                    printUserInfo();
+                    getDataForUser();
+                    
+                    if(!$session->isAdmin()){
+                        echo "<a href=\"include/update.php\">Atnaujinti buvimo vietą</a> &nbsp;&nbsp;";
+                    }
                     
                     //Jei vartotojas neprisijungęs, rodoma prisijungimo forma
                     //Jei atsiranda klaidų, rodomi pranešimai.

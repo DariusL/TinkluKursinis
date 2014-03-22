@@ -8,12 +8,7 @@
 if (isset($database)) {
     $log_out = "";
     if(isset($session) && $session->logged_in){
-        $path = "";
-        if (isset($_SESSION['path'])) {
-            $path = $_SESSION['path'];
-            unset($_SESSION['path']);
-        }
-        $log_out = "<a href=\"" . $path . "process.php\">Atsijungti</a> &nbsp;&nbsp;";
+        $log_out = "<a href=\"process.php\">Atsijungti</a> &nbsp;&nbsp;";
     }
     echo ""
     . "<table width=100% "

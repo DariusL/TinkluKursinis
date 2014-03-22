@@ -110,6 +110,12 @@ class MySQLDB {
         $q = "INSERT INTO ".TBL_USERS." VALUES ('$id', '$first_name', '$last_name', 1, '$password', NULL)";
         return mysql_query($q, $this->connection);
     }
+    
+    function addLocation($id, $lat, $lng){
+        $time = date("Y-m-d H:i:s");
+        $q = "INSERT INTO locations (user_id, time, lat, lng) VALUES('$id', '$time', '$lat', '$lng')";
+        $this->query($q);
+    }
 
     /**
      * updateUserField - Updates a field, specified by the field
@@ -135,6 +141,24 @@ class MySQLDB {
         /* Return result array */
         $dbarray = mysql_fetch_array($result);
         return $dbarray;
+    }
+    
+    function getLastLocation($id){
+        $ret = [];
+        $data = $this->query("SELECT lat, lng, time FROM locations WHERE user_id = $id ORDER BY time DESC LIMIT 1");
+        while($row = mysql_fetch_assoc($data)){
+            array_push($ret, $row);
+        }
+        return $ret;
+    }
+    
+    function getLastLocations(){
+        $ret = [];
+        $ids = $this->query("SELECT DISTINCT user_id FROM locations");
+        while($row = mysql_fetch_assoc($ids)){
+            array_push($ret, $this->getLastLocation($row['user_id'])[0]);
+        }
+        return $ret;
     }
 
     /**
