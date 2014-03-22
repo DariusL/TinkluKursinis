@@ -22,14 +22,7 @@ include("include/session.php");
                 //Jei vartotojas prisijungęs
                 if ($session->logged_in) {
                     include("include/content.php");
-                ?>
-                <div style="text-align: center; color: green">
-                    <br>
-                    <br>
-                    <h1>Pradinis sistemos puslapis (index.php).</h1>
-                </div>
-                <br>
-                <?
+                    
                     //Jei vartotojas neprisijungęs, rodoma prisijungimo forma
                     //Jei atsiranda klaidų, rodomi pranešimai.
                 } else {
