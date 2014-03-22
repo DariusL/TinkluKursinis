@@ -6,9 +6,9 @@ include("form.php");
 
 class Session {
 
-    var $username;     //Username given on sign-up
-    var $userid;       //Random value generated on current login
-    var $userlevel;    //The level to which the user pertains
+    var $user_id;      //unique uid
+    var $session_id;   //Random value generated on current login
+    var $user_type;    //The level to which the user pertains
     var $time;         //Time user was last active (page loaded)
     var $logged_in;    //True if user is logged in, false otherwise
     var $userinfo = array();  //The array holding all user info
@@ -46,8 +46,7 @@ class Session {
          * active guests table accordingly.
          */
         if (!$this->logged_in) {
-            $this->username = $_SESSION['username'] = GUEST_NAME;
-            $this->userlevel = GUEST_LEVEL;
+            $this->user_id = $_SESSION[CLMN_USERS_ID] = GUEST_ID;
         }
 
         /* Set referrer page */
@@ -71,27 +70,27 @@ class Session {
     function checkLogin() {
         global $database;  //The database connection
         /* Check if user has been remembered */
-        if (isset($_COOKIE['cookname']) && isset($_COOKIE['cookid'])) {
-            $this->username = $_SESSION['username'] = $_COOKIE['cookname'];
-            $this->userid = $_SESSION['userid'] = $_COOKIE['cookid'];
+        if (isset($_COOKIE[CLMN_USERS_ID]) && isset($_COOKIE[CLMN_USERS_S_ID])) {
+            $this->user_id = $_SESSION[CLMN_USERS_ID] = $_COOKIE[CLMN_USERS_ID];
+            $this->session_id = $_SESSION[CLMN_USERS_S_ID] = $_COOKIE[CLMN_USERS_S_ID];
         }
 
         /* Username and userid have been set and not guest */
-        if (isset($_SESSION['username']) && isset($_SESSION['userid']) &&
-                $_SESSION['username'] != GUEST_NAME) {
+        if (isset($_SESSION[CLMN_USERS_ID]) && isset($_SESSION[CLMN_USERS_S_ID]) &&
+                $_SESSION[CLMN_USERS_ID] != GUEST_ID) {
             /* Confirm that username and userid are valid */
-            if ($database->confirmUserID($_SESSION['username'], $_SESSION['userid']) != 0) {
+            if ($database->confirmSessionID($_SESSION[CLMN_USERS_ID], $_SESSION[CLMN_USERS_S_ID]) != 0) {
                 /* Variables are incorrect, user not logged in */
-                unset($_SESSION['username']);
-                unset($_SESSION['userid']);
+                unset($_SESSION[CLMN_USERS_ID]);
+                unset($_SESSION[CLMN_USERS_S_ID]);
                 return false;
             }
 
             /* User is logged in, set class variables */
-            $this->userinfo = $database->getUserInfo($_SESSION['username']);
-            $this->username = $this->userinfo['username'];
-            $this->userid = $this->userinfo['userid'];
-            $this->userlevel = $this->userinfo['userlevel'];
+            $this->userinfo = $database->getUserInfo($_SESSION[CLMN_USERS_ID]);
+            $this->user_id = $this->userinfo[CLMN_USERS_ID];
+            $this->session_id = $this->userinfo[CLMN_USERS_S_ID];
+            $this->user_type= $this->userinfo[CLMN_TYPES_NAME];
             return true;
         }
 
@@ -106,24 +105,24 @@ class Session {
      * of that information in the database and creates the session.
      * Effectively logging in the user if all goes well.
      */
-    function login($subuser, $subpass, $subremember) {
+    function login($sub_id, $sub_pass, $sub_remember) {
         global $database, $form;  //The database and form object
 
         /* Username error checking */
         $field = "user";  //Use field name for username
-        if (!$subuser || strlen($subuser = trim($subuser)) == 0) {
+        if (!$sub_id || strlen($sub_id = trim($sub_id)) == 0) {
             $form->setError($field, "* Neįvestas vartotojo vardas");
         } else {
-            /* Check if username is not alphanumeric */
-            if (!eregi("^([0-9a-z])*$", $subuser)) {
+            /* Check if username is not numeric */
+            if (!eregi("^([0-9])*$", $sub_id)) {
                 $form->setError($field, "* Vartotojo vardas gali būti sudarytas
-                    <br>&nbsp;&nbsp;tik iš raidžių ir skaičių");
+                    <br>&nbsp;&nbsp;tik iš skaičių");
             }
         }
 
         /* Password error checking */
         $field = "pass";  //Use field name for password
-        if (!$subpass) {
+        if (!$sub_pass) {
             $form->setError($field, "* Neįvestas slaptažodis");
         }
 
@@ -133,8 +132,8 @@ class Session {
         }
 
         /* Checks that username is in database and password is correct */
-        $subuser = stripslashes($subuser);
-        $result = $database->confirmUserPass($subuser, md5($subpass));
+        $sub_id = stripslashes($sub_id);
+        $result = $database->confirmUserPass($sub_id, md5($sub_pass));
 
         /* Check error codes */
         if ($result == 1) {
@@ -151,13 +150,13 @@ class Session {
         }
 
         /* Username and password correct, register session variables */
-        $this->userinfo = $database->getUserInfo($subuser);
-        $this->username = $_SESSION['username'] = $this->userinfo['username'];
-        $this->userid = $_SESSION['userid'] = $this->generateRandID();
-        $this->userlevel = $this->userinfo['userlevel'];
+        $this->userinfo = $database->getUserInfo($sub_id);
+        $this->user_id = $_SESSION[CLMN_USERS_ID] = $sub_id;
+        $this->session_id = $_SESSION[CLMN_USERS_S_ID] = $this->generateRandID();
+        $this->user_type = $this->userinfo[CLMN_TYPES_NAME];
 
         /* Insert userid into database and update active users table */
-        $database->updateUserField($this->username, "userid", $this->userid);
+        $database->updateUserField($this->user_id, CLMN_USERS_S_ID, $this->session_id);
 
         /**
          * This is the cool part: the user has requested that we remember that
@@ -166,9 +165,12 @@ class Session {
          * specified in constants.php. Now, next time he comes to our site, we will
          * log him in automatically, but only if he didn't log out before he left.
          */
-        if ($subremember) {
-            setcookie("cookname", $this->username, time() + COOKIE_EXPIRE, COOKIE_PATH);
-            setcookie("cookid", $this->userid, time() + COOKIE_EXPIRE, COOKIE_PATH);
+        if ($sub_remember) {
+            setcookie(CLMN_USERS_ID, $this->user_id, time() + COOKIE_EXPIRE, COOKIE_PATH);
+            setcookie(CLMN_USERS_S_ID, $this->session_id, time() + COOKIE_EXPIRE, COOKIE_PATH);
+        }else{
+            setcookie(CLMN_USERS_ID, "", time() - COOKIE_EXPIRE, COOKIE_PATH);
+            setcookie(CLMN_USERS_S_ID, "", time() - COOKIE_EXPIRE, COOKIE_PATH);
         }
 
         /* Login completed successfully */
@@ -189,20 +191,19 @@ class Session {
          * cookie.
          */
         if (isset($_COOKIE['cookname']) && isset($_COOKIE['cookid'])) {
-            setcookie("cookname", "", time() - COOKIE_EXPIRE, COOKIE_PATH);
-            setcookie("cookid", "", time() - COOKIE_EXPIRE, COOKIE_PATH);
+            setcookie(CLMN_USERS_ID, "", time() - COOKIE_EXPIRE, COOKIE_PATH);
+            setcookie(CLMN_USERS_S_ID, "", time() - COOKIE_EXPIRE, COOKIE_PATH);
         }
 
         /* Unset PHP session variables */
-        unset($_SESSION['username']);
-        unset($_SESSION['userid']);
+        unset($_SESSION[CLMN_USERS_ID]);
+        unset($_SESSION[CLMN_USERS_S_ID]);
 
         /* Reflect fact that user has logged out */
         $this->logged_in = false;
 
         /* Set user level to guest */
-        $this->username = GUEST_NAME;
-        $this->userlevel = GUEST_LEVEL;
+        $this->user_id = GUEST_ID;
     }
 
     /**
@@ -212,44 +213,41 @@ class Session {
      * 1. If no errors were found, it registers the new user and
      * returns 0. Returns 2 if registration failed.
      */
-    function register($subuser, $subpass, $subemail) {
+    function register($sub_id, $sub_pass, $sub_first, $sub_last) {
         global $database, $form, $mailer;  //The database, form and mailer object
 
         /* Username error checking */
         $field = "user";  //Use field name for username
-        if (!$subuser || strlen($subuser = trim($subuser)) == 0) {
+        if (!$sub_id || strlen($sub_id = trim($sub_id)) == 0) {
             $form->setError($field, "* Vartotojas neįvestas");
         } else {
             /* Spruce up username, check length */
-            $subuser = stripslashes($subuser);
-            if (strlen($subuser) < 5) {
-                $form->setError($field, "* Vartotojo vardas turi mažiau kaip 5 simbolius");
-            } else if (strlen($subuser) > 30) {
-                $form->setError($field, "* Vartotojo vardas virš 30 simbolių");
+            $sub_id = stripslashes($sub_id);
+            if (strlen($sub_id) < 5) {
+                $form->setError($field, "* Vartotojo numeris turi mažiau kaip 5 simbolius");
+            } else if (strlen($sub_id) > 30) {
+                $form->setError($field, "* Vartotojo numeris virš 30 simbolių");
             }
-            /* Check if username is not alphanumeric */ else if (!eregi("^([0-9a-z])+$", $subuser)) {
+            /* Check if username is not alphanumeric */ else if (!eregi("^([0-9])+$", $sub_id)) {
                 $form->setError($field, "* Vartotojo vardas gali būti sudarytas
-                    <br>&nbsp;&nbsp;tik iš raidžių ir skaičių");
+                    <br>&nbsp;&nbsp;tik iš skaičių");
             }
-            /* Check if username is reserved */ else if (strcasecmp($subuser, GUEST_NAME) == 0) {
-                $form->setError($field, "* Rezervuotas vartotojo vardas");
-            }
-            /* Check if username is already in use */ else if ($database->usernameTaken($subuser)) {
-                $form->setError($field, "* Toks vartotojo vardas jau yra");
+            /* Check if username is already in use */ else if ($database->idTaken($sub_id)) {
+                $form->setError($field, "* Toks numeris jau registruotas");
             }
         }
 
         /* Password error checking */
         $field = "pass";  //Use field name for password
-        if (!$subpass) {
+        if (!$sub_pass) {
             $form->setError($field, "* Neįvestas slaptažodis");
         } else {
             /* Spruce up password and check length */
-            $subpass = stripslashes($subpass);
-            if (strlen($subpass) < 4) {
+            $sub_pass = stripslashes($sub_pass);
+            if (strlen($sub_pass) < 4) {
                 $form->setError($field, "* Ne mažiau kaip 4 simboliai");
             }
-            /* Check if password is not alphanumeric */ else if (!eregi("^([0-9a-z])+$", ($subpass = trim($subpass)))) {
+            /* Check if password is not alphanumeric */ else if (!eregi("^([0-9a-z])+$", ($sub_pass = trim($sub_pass)))) {
                 $form->setError($field, "* Slaptažodis gali būti sudarytas
                     <br>&nbsp;&nbsp;tik iš raidžių ir skaičių");
             }
@@ -261,19 +259,26 @@ class Session {
              */
         }
 
-        /* Email error checking */
-        $field = "email";  //Use field name for email
-        if (!$subemail || strlen($subemail = trim($subemail)) == 0) {
-            $form->setError($field, "* Neįvestas e-pašto adresas");
-        } else {
-            /* Check if valid email address */
-            $regex = "^[_+a-z0-9-]+(\.[_+a-z0-9-]+)*"
-                    . "@[a-z0-9-]+(\.[a-z0-9-]{1,})*"
-                    . "\.([a-z]{2,}){1}$";
-            if (!eregi($regex, $subemail)) {
-                $form->setError($field, "* Klaidingas e-pašto adresas");
+        $field = "first name"; 
+        if(!$sub_first || strlen($sub_first = trim($sub_first)) == 0){
+            $form->setError($field, "* Neįvestas vardas");
+        }else{
+            $sub_first = stripslashes($sub_first);
+            if(!eregi("^([a-z])+$", $sub_first)){
+                $form->setError($field, "* Vardas gali būti sudarytas
+                    <br>&nbsp;&nbsp;tik iš raidžių");
             }
-            $subemail = stripslashes($subemail);
+        }
+        
+        $field = "last name"; 
+        if(!$sub_last || strlen($sub_last = trim($sub_last)) == 0){
+            $form->setError($field, "* Neįvestas vardas");
+        }else{
+            $sub_last = stripslashes($sub_last);
+            if(!eregi("^([a-z])+$", $sub_last)){
+                $form->setError($field, "* Pavardė gali būti sudaryta
+                    <br>&nbsp;&nbsp;tik iš raidžių");
+            }
         }
 
         /* Errors exist, have user correct them */
@@ -281,10 +286,7 @@ class Session {
             return 1;  //Errors with form
         }
         /* No errors, add the new account to the */ else {
-            if ($database->addNewUser($subuser, md5($subpass), $subemail)) {
-                if (EMAIL_WELCOME) {
-                    $mailer->sendWelcome($subuser, $subemail, $subpass);
-                }
+            if ($database->addNewUser($sub_id, md5($subpass), $sub_first, $sub_last)) {
                 return 0;  //New user added succesfully
             } else {
                 return 2;  //Registration attempt failed
@@ -293,95 +295,11 @@ class Session {
     }
 
     /**
-     * editAccount - Attempts to edit the user's account information
-     * including the password, which it first makes sure is correct
-     * if entered, if so and the new password is in the right
-     * format, the change is made. All other fields are changed
-     * automatically.
-     */
-    function editAccount($subcurpass, $subnewpass, $subemail) {
-        global $database, $form;  //The database and form object
-        /* New password entered */
-        if ($subnewpass) {
-            /* Current Password error checking */
-            $field = "curpass";  //Use field name for current password
-            if (!$subcurpass) {
-                $form->setError($field, "* Neįvestas slaptažodis");
-            } else {
-                /* Check if password too short or is not alphanumeric */
-                $subcurpass = stripslashes($subcurpass);
-                if (strlen($subcurpass) < 4 ||
-                        !eregi("^([0-9a-z])+$", ($subcurpass = trim($subcurpass)))) {
-                    $form->setError($field, "* Slaptažodis gali būti sudarytas
-                    <br>&nbsp;&nbsp;tik iš raidžių ir skaičių");
-                }
-                /* Password entered is incorrect */
-                if ($database->confirmUserPass($this->username, md5($subcurpass)) != 0) {
-                    $form->setError($field, "* Neteisingas slaptažodis");
-                }
-            }
-
-            /* New Password error checking */
-            $field = "newpass";  //Use field name for new password
-            /* Spruce up password and check length */
-            $subpass = stripslashes($subnewpass);
-            if (strlen($subnewpass) < 4) {
-                $form->setError($field, "* Slaptažodis per trumpas");
-            }
-            /* Check if password is not alphanumeric */ else if (!eregi("^([0-9a-z])+$", ($subnewpass = trim($subnewpass)))) {
-                $form->setError($field, "* Slaptažodis gali būti sudarytas
-                    <br>&nbsp;&nbsp;tik iš raidžių ir skaičių");
-            }
-        }
-        /* Change password attempted */ else if ($subcurpass) {
-            /* New Password error reporting */
-            $field = "newpass";  //Use field name for new password
-            $form->setError($field, "* Neįvestas naujas slaptažodis");
-        }
-
-        /* Email error checking */
-        $field = "email";  //Use field name for email
-        if ($subemail && strlen($subemail = trim($subemail)) > 0) {
-            /* Check if valid email address */
-            $regex = "^[_+a-z0-9-]+(\.[_+a-z0-9-]+)*"
-                    . "@[a-z0-9-]+(\.[a-z0-9-]{1,})*"
-                    . "\.([a-z]{2,}){1}$";
-            if (!eregi($regex, $subemail)) {
-                $form->setError($field, "* Neteisingas e-pašto adresas");
-            }
-            $subemail = stripslashes($subemail);
-        }
-
-        /* Errors exist, have user correct them */
-        if ($form->num_errors > 0) {
-            return false;  //Errors with form
-        }
-
-        /* Update password since there were no errors */
-        if ($subcurpass && $subnewpass) {
-            $database->updateUserField($this->username, "password", md5($subnewpass));
-        }
-
-        /* Change Email */
-        if ($subemail) {
-            $database->updateUserField($this->username, "email", $subemail);
-        }
-
-        /* Success! */
-        return true;
-    }
-
-    /**
      * isAdmin - Returns true if currently logged in user is
      * an administrator, false otherwise.
      */
     function isAdmin() {
-        return ($this->userlevel == ADMIN_LEVEL ||
-                $this->username == ADMIN_NAME);
-    }
-
-    function isManager() {
-        return ($this->userlevel == MANAGER_LEVEL);
+        return ($this->user_type == TYPE_ADMIN);
     }
 
     /**

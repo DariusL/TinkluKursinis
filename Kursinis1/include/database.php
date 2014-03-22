@@ -34,14 +34,14 @@ class MySQLDB {
      * passwords don't match up, it returns an error code
      * (1 or 2). On success it returns 0.
      */
-    function confirmUserPass($username, $password) {
+    function confirmUserPass($uid, $password) {
         /* Add slashes if necessary (for query) */
         if (!get_magic_quotes_gpc()) {
-            $username = addslashes($username);
+            $uid = addslashes($uid);
         }
 
         /* Verify that user is in database */
-        $q = "SELECT password FROM " . TBL_USERS . " WHERE username = '$username'";
+        $q = "SELECT ".CLMN_USERS_PASS." FROM ".TBL_USERS." WHERE ".CLMN_USERS_ID." = '$uid'";
         $result = mysql_query($q, $this->connection);
         if (!$result || (mysql_numrows($result) < 1)) {
             return 1; //Indicates username failure
@@ -49,33 +49,25 @@ class MySQLDB {
 
         /* Retrieve password from result, strip slashes */
         $dbarray = mysql_fetch_array($result);
-        $dbarray['password'] = stripslashes($dbarray['password']);
+        $dbarray[CLMN_USERS_PASS] = stripslashes($dbarray[CLMN_USERS_PASS]);
         $password = stripslashes($password);
 
         /* Validate that password is correct */
-        if ($password == $dbarray['password']) {
+        if ($password == $dbarray[CLMN_USERS_PASS]) {
             return 0; //Success! Username and password confirmed
         } else {
             return 2; //Indicates password failure
         }
     }
-
-    /**
-     * confirmUserID - Checks whether or not the given
-     * username is in the database, if so it checks if the
-     * given userid is the same userid in the database
-     * for that user. If the user doesn't exist or if the
-     * userids don't match up, it returns an error code
-     * (1 or 2). On success it returns 0.
-     */
-    function confirmUserID($username, $userid) {
+    
+    function confirmSessionID($user_id, $session_id) {
         /* Add slashes if necessary (for query) */
         if (!get_magic_quotes_gpc()) {
-            $username = addslashes($username);
+            $user_id = addslashes($user_id);
         }
 
         /* Verify that user is in database */
-        $q = "SELECT userid FROM " . TBL_USERS . " WHERE username = '$username'";
+        $q = "SELECT ".CLMN_USERS_S_ID." FROM ".TBL_USERS." WHERE ".CLMN_USERS_ID." = '$user_id'";
         $result = mysql_query($q, $this->connection);
         if (!$result || (mysql_numrows($result) < 1)) {
             return 1; //Indicates username failure
@@ -83,26 +75,27 @@ class MySQLDB {
 
         /* Retrieve userid from result, strip slashes */
         $dbarray = mysql_fetch_array($result);
-        $dbarray['userid'] = stripslashes($dbarray['userid']);
-        $userid = stripslashes($userid);
+        $dbarray[CLMN_USERS_S_ID] = stripslashes($dbarray[CLMN_USERS_S_ID]);
+        $session_id = stripslashes($session_id);
 
         /* Validate that userid is correct */
-        if ($userid == $dbarray['userid']) {
+        if ($session_id == $dbarray[CLMN_USERS_S_ID]) {
             return 0; //Success! Username and userid confirmed
         } else {
             return 2; //Indicates userid invalid
         }
     }
 
+
     /**
      * usernameTaken - Returns true if the username has
      * been taken by another user, false otherwise.
      */
-    function usernameTaken($username) {
+    function idTaken($id) {
         if (!get_magic_quotes_gpc()) {
-            $username = addslashes($username);
+            $id = addslashes($id);
         }
-        $q = "SELECT username FROM " . TBL_USERS . " WHERE username = '$username'";
+        $q = "SELECT ".CLMN_USERS_ID." FROM ".TBL_USERS." WHERE ".CLMN_USERS_ID." = '$id'";
         $result = mysql_query($q, $this->connection);
         return (mysql_numrows($result) > 0);
     }
@@ -113,15 +106,8 @@ class MySQLDB {
      * info into the database. Appropriate user level is set.
      * Returns true on success, false otherwise.
      */
-    function addNewUser($username, $password, $email) {
-        $time = time();
-        /* If admin sign up, give admin user level */
-        if (strcasecmp($username, ADMIN_NAME) == 0) {
-            $ulevel = ADMIN_LEVEL;
-        } else {
-            $ulevel = USER_LEVEL;
-        }
-        $q = "INSERT INTO " . TBL_USERS . " VALUES ('$username', '$password', '0', $ulevel, '$email', $time)";
+    function addNewUser($id, $password, $first_name, $last_name) {
+        $q = "INSERT INTO ".TBL_USERS." VALUES ('$id', '$first_name', '$last_name', 1, '$password')";
         return mysql_query($q, $this->connection);
     }
 
@@ -129,8 +115,8 @@ class MySQLDB {
      * updateUserField - Updates a field, specified by the field
      * parameter, in the user's row of the database.
      */
-    function updateUserField($username, $field, $value) {
-        $q = "UPDATE " . TBL_USERS . " SET " . $field . " = '$value' WHERE username = '$username'";
+    function updateUserField($id, $field, $value) {
+        $q = "UPDATE ".TBL_USERS." SET " . $field . " = '$value' WHERE ".CLMN_USERS_ID." = '$id'";
         return mysql_query($q, $this->connection);
     }
 
@@ -139,8 +125,8 @@ class MySQLDB {
      * query asking for all information stored regarding
      * the given username. If query fails, NULL is returned.
      */
-    function getUserInfo($username) {
-        $q = "SELECT * FROM " . TBL_USERS . " WHERE username = '$username'";
+    function getUserInfo($id) {
+        $q = "SELECT users.id, first_name, last_name, s_id, user_types.name FROM users LEFT JOIN user_types ON users.type = user_types.id WHERE users.id = '$id'";
         $result = mysql_query($q, $this->connection);
         /* Error occurred, return given name by default */
         if (!$result || (mysql_numrows($result) < 1)) {
@@ -161,7 +147,7 @@ class MySQLDB {
      */
     function getNumMembers() {
         if ($this->num_members < 0) {
-            $q = "SELECT * FROM " . TBL_USERS;
+            $q = "SELECT * FROM ".TBL_USERS;
             $result = mysql_query($q, $this->connection);
             $this->num_members = mysql_numrows($result);
         }

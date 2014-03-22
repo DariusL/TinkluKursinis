@@ -11,7 +11,7 @@
     <AssemblyName>Kursinis1</AssemblyName>
     <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
     <Server>Custom</Server>
-    <CustomServerUrl>http://darlap1.stud.if.ktu.lt/tinklai</CustomServerUrl>
+    <CustomServerUrl>http://darlap1.stud.if.ktu.lt/tinklai/</CustomServerUrl>
     <PublishEvent>BeforeRun</PublishEvent>
     <PHPDevAutoPort>True</PHPDevAutoPort>
     <PHPDevPort>32553</PHPDevPort>

@@ -22,9 +22,19 @@ define("DB_NAME", "darlap1");
  * in the script.
  */
 define("TBL_USERS", "users");
-define("TBL_ACTIVE_USERS", "active_users");
-define("TBL_ACTIVE_GUESTS", "active_guests");
-define("TBL_BANNED_USERS", "banned_users");
+define("TBL_TYPES", "user_types");
+
+define("CLMN_USERS_ID", "id");
+define("CLMN_USERS_FIRST", "first_name");
+define("CLMN_USERS_LAST", "last_name");
+define("CLMN_USERS_TYPE", "type");
+define("CLMN_USERS_PASS", "pass");
+define("CLMN_USERS_S_ID", "s_id");
+
+define("CLMN_TYPES_ID", "id");
+define("CLMN_TYPES_NAME", "name");
+
+define("GUEST_ID", 0);
 
 /**
  * Special Names and Level Constants - the admin
@@ -35,14 +45,8 @@ define("TBL_BANNED_USERS", "banned_users");
  * also add additional level specifications.
  * Levels must be digits between 0-9.
  */
-define("ADMIN_NAME", "Administratorius");
-define("MANAGER_NAME", "Valdytojas");
-define("USER_NAME", "Vartotojas");
-define("GUEST_NAME", "Svečias");
-define("ADMIN_LEVEL", 9);
-define("MANAGER_LEVEL", 5);
-define("USER_LEVEL", 1);
-define("GUEST_LEVEL", 0);
+define("TYPE_ADMIN", "admin");
+define("TYPE_USER", "user");
 
 /**
  * Timeout Constants - these constants refer to

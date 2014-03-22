@@ -11,7 +11,9 @@ include("include/session.php");
     <table class="center">
         <tr>
             <td>
-                <center><img src="pictures/top.png"/></center>
+                <div style="text-align: center; color: green">
+                    <h1>Įmonės personalo judėjimo stebėjimo IS</h1>
+                </div>
             </td>
         </tr>
         <tr>
