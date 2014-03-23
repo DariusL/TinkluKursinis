@@ -23,7 +23,7 @@ include("include/content.php");
                 //Jei vartotojas prisijungęs
                 if ($session->logged_in) {
                     printUserInfo();
-                    getDataForUser();
+                    showContent();
                     
                     if(!$session->isAdmin()){
                         echo "<a href=\"include/update.php\">Atnaujinti buvimo vietą</a> &nbsp;&nbsp;";

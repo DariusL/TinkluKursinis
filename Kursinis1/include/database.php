@@ -144,19 +144,14 @@ class MySQLDB {
     }
     
     function getLastLocation($id){
-        $ret = [];
-        $data = $this->query("SELECT lat, lng, time FROM locations WHERE user_id = $id ORDER BY time DESC LIMIT 1");
-        while($row = mysql_fetch_assoc($data)){
-            array_push($ret, $row);
-        }
-        return $ret;
+        return mysql_fetch_assoc($this->query("SELECT lat, lng, time, first_name, last_name, users.id FROM locations LEFT JOIN users ON locations.user_id = users.id WHERE user_id = $id ORDER BY time DESC LIMIT 1"));
     }
     
     function getLastLocations(){
         $ret = [];
         $ids = $this->query("SELECT DISTINCT user_id FROM locations");
         while($row = mysql_fetch_assoc($ids)){
-            array_push($ret, $this->getLastLocation($row['user_id'])[0]);
+            array_push($ret, $this->getLastLocation($row['user_id']));
         }
         return $ret;
     }
