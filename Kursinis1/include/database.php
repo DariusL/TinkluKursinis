@@ -132,7 +132,7 @@ class MySQLDB {
      * the given username. If query fails, NULL is returned.
      */
     function getUserInfo($id) {
-        $q = "SELECT users.id, first_name, last_name, s_id, user_types.name FROM users LEFT JOIN user_types ON users.type = user_types.id WHERE users.id = '$id'";
+        $q = "SELECT users.id, first_name, last_name, s_id, user_types.name, users.color FROM users LEFT JOIN user_types ON users.type = user_types.id WHERE users.id = '$id'";
         $result = mysql_query($q, $this->connection);
         /* Error occurred, return given name by default */
         if (!$result || (mysql_numrows($result) < 1)) {
@@ -169,7 +169,8 @@ class MySQLDB {
         $ret = [];
         $ids = $this->query("SELECT DISTINCT user_id FROM locations");
         while($row = mysql_fetch_array($ids, MYSQL_NUM)){
-            array_push($ret, $this->getUserHistory($row[0]));
+            $color = $this->getUserInfo($row[0])['color'];
+            array_push($ret, ["path" => $this->getUserHistory($row[0]), "color" => $color]);
         }
         return $ret;
     }

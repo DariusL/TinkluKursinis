@@ -12,7 +12,8 @@ function getDataForUser(){
     global $database, $session;
     $id = $session->user_id;
     $history = $database->getUserHistory($id);
-    $image = "https://maps.googleapis.com/maps/api/staticmap?path=color:0xff0000ff|weight:5";
+    $color = $session->userinfo['color'];
+    $image = "https://maps.googleapis.com/maps/api/staticmap?path=color:0x$color|weight:5";
     foreach($history as $point){
         $image .= "|$point[lat], $point[lng]";
     }
@@ -33,8 +34,14 @@ function getDataForAdmin(){
     $image = "https://maps.googleapis.com/maps/api/staticmap";
     $delim = "?";
     foreach($histories as $history){
-        
+        $image .= $delim."path=color:0x$history[color]|weight:5";
+        $delim = "&";
+        foreach($history['path'] as $point){
+            $image .= "|$point[lat], $point[lng]";
+        }
     }
+    $image .= "&size=512x512&sensor=false";
+    echo "<img src=\"$image\" alt=\"Keliai\">";
     $locs = $database->getLastLocations();
     $result = "<table><tr><th>Vardas</th><th>Pavardë</th><th>Numeris</th><th>Latitude</th><th>Longtitude</th><th>Laikas</th></tr>";
         
@@ -47,7 +54,7 @@ function getDataForAdmin(){
 
 function printUserInfo(){
     global $database, $session;
-    $info = $database->getUserInfo($session->user_id);
+    $info = $session->userinfo;
     $type = $session->isAdmin() ? "Administatorius" : "Vartotojas";
     echo "$type   $info[first_name] $info[last_name] $info[id]<br>";
 }
