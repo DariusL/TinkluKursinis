@@ -10,7 +10,15 @@ function showContent(){
 
 function getDataForUser(){
     global $database, $session;
-    $location = $database->getLastLocation($session->user_id);
+    $id = $session->user_id;
+    $history = $database->getUserHistory($id);
+    $image = "https://maps.googleapis.com/maps/api/staticmap?path=color:0xff0000ff|weight:5";
+    foreach($history as $point){
+        $image .= "|$point[lat], $point[lng]";
+    }
+    $image .= "&size=512x512&sensor=false";
+    echo "<img src=\"$image\" alt=\"Kelias\">";
+    $location = $database->getLastLocation($id);
     $result = "<table><tr><th>Latitude</th><th>Longtitude</th><th>Laikas</th></tr>";
     
     $result .= "<tr><td>$location[lat]</td><td>$location[lng]</td><td>$location[time]</td></tr>";
@@ -21,6 +29,12 @@ function getDataForUser(){
 
 function getDataForAdmin(){
     global $database, $session;
+    $histories = $database->getAllHistories();
+    $image = "https://maps.googleapis.com/maps/api/staticmap";
+    $delim = "?";
+    foreach($histories as $history){
+        
+    }
     $locs = $database->getLastLocations();
     $result = "<table><tr><th>Vardas</th><th>Pavardë</th><th>Numeris</th><th>Latitude</th><th>Longtitude</th><th>Laikas</th></tr>";
         

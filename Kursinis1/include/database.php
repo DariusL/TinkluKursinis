@@ -144,7 +144,7 @@ class MySQLDB {
     }
     
     function getLastLocation($id){
-        return mysql_fetch_assoc($this->query("SELECT lat, lng, time, first_name, last_name, users.id FROM locations LEFT JOIN users ON locations.user_id = users.id WHERE user_id = $id ORDER BY time DESC LIMIT 1"));
+        return mysql_fetch_assoc($this->query("SELECT lat, lng, time, first_name, last_name, users.id FROM locations LEFT JOIN users ON locations.user_id = users.id WHERE user_id = '$id' ORDER BY time DESC LIMIT 1"));
     }
     
     function getLastLocations(){
@@ -152,6 +152,24 @@ class MySQLDB {
         $ids = $this->query("SELECT DISTINCT user_id FROM locations");
         while($row = mysql_fetch_assoc($ids)){
             array_push($ret, $this->getLastLocation($row['user_id']));
+        }
+        return $ret;
+    }
+    
+    function getUserHistory($id){
+        $ret = [];
+        $data = $this->query("SELECT lat, lng FROM locations WHERE user_id = '$id' ORDER BY time");
+        while($row = mysql_fetch_assoc($data)){
+            array_push($ret, $row);
+        }
+        return $ret;
+    }
+    
+    function getAllHistories(){
+        $ret = [];
+        $ids = $this->query("SELECT DISTINCT user_id FROM locations");
+        while($row = mysql_fetch_array($ids, MYSQL_NUM)){
+            array_push($ret, $this->getUserHistory($row[0]));
         }
         return $ret;
     }
