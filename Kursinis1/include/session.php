@@ -220,16 +220,14 @@ class Session {
         } else {
             /* Spruce up username, check length */
             $sub_id = stripslashes($sub_id);
-            if (strlen($sub_id) < 5) {
-                $form->setError($field, "* Vartotojo numeris turi mažiau kaip 5 simbolius");
-            } else if (strlen($sub_id) > 30) {
-                $form->setError($field, "* Vartotojo numeris virš 30 simbolių");
-            }
-            /* Check if username is not alphanumeric */ else if (!eregi("^([0-9])+$", $sub_id)) {
+            if(!eregi("^([0-9])+$", $sub_id)){
                 $form->setError($field, "* Vartotojo vardas gali būti sudarytas
                     <br>&nbsp;&nbsp;tik iš skaičių");
             }
-            /* Check if username is already in use */ else if ($database->idTaken($sub_id)) {
+            else if (strlen($sub_id) != 8) {
+                $form->setError($field, "* Vartotojo numerį turi sudaryti 8 skaitmenys");
+            }
+            else if ($database->idTaken($sub_id)) {
                 $form->setError($field, "* Toks numeris jau registruotas");
             }
         }
