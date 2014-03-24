@@ -43,10 +43,11 @@ function getDataForAdmin(){
     $image .= "&size=512x512&sensor=false";
     echo "<img src=\"$image\" alt=\"Keliai\">";
     $locs = $database->getLastLocations();
-    $result = "<table><tr><th>Vardas</th><th>Pavardë</th><th>Numeris</th><th>Latitude</th><th>Longtitude</th><th>Laikas</th></tr>";
+    $result = "<table><tr><th>Vardas</th><th>Pavardë</th><th>Numeris</th><th>Latitude</th><th>Longtitude</th><th>Laikas</th><th>Spalva</th></tr>";
         
     foreach($locs as $location){
-        $result .= "<tr><td>$location[first_name]</td><td>$location[last_name]</td><td>$location[id]</td><td>$location[lat]</td><td>$location[lng]</td><td>$location[time]</td></tr>";
+        $color = substr($location["color"], 0, 6);
+        $result .= "<tr><td>$location[first_name]</td><td>$location[last_name]</td><td>$location[id]</td><td>$location[lat]</td><td>$location[lng]</td><td>$location[time]</td><td><div style=\"background-color:#$color;width:50px;height:10px;border:1px solid #000\"/></td></tr>";
     }
     $result .= "</table>";
     echo $result;

@@ -152,7 +152,7 @@ class MySQLDB {
     }
     
     function getLastLocation($id){
-        return mysql_fetch_assoc($this->query("SELECT lat, lng, time, first_name, last_name, users.id FROM locations LEFT JOIN users ON locations.user_id = users.id WHERE user_id = '$id' ORDER BY time DESC LIMIT 1"));
+        return mysql_fetch_assoc($this->query("SELECT lat, lng, time, first_name, last_name, users.id, color FROM locations LEFT JOIN users ON locations.user_id = users.id WHERE user_id = '$id' ORDER BY time DESC LIMIT 1"));
     }
     
     function getLastLocations(){
