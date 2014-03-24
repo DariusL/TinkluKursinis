@@ -1,7 +1,6 @@
 <?
 
 include("database.php");
-include("mailer.php");
 include("form.php");
 
 class Session {
