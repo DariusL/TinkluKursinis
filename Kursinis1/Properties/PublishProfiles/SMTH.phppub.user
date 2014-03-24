@@ -12,7 +12,7 @@
       <publishTime>03/21/2014 21:39:55</publishTime>
     </File>
     <File Include="include/content.php">
-      <publishTime>03/24/2014 19:07:27</publishTime>
+      <publishTime>03/24/2014 20:11:56</publishTime>
     </File>
     <File Include="include/database.php">
       <publishTime>03/24/2014 18:18:17</publishTime>
@@ -36,19 +36,13 @@
       <publishTime>03/24/2014 17:34:35</publishTime>
     </File>
     <File Include="index.php">
-      <publishTime>03/24/2014 19:56:19</publishTime>
-    </File>
-    <File Include="naujienos.txt">
-      <publishTime>03/05/2012 19:02:48</publishTime>
+      <publishTime>03/24/2014 20:00:43</publishTime>
     </File>
     <File Include="pictures/.htaccess">
       <publishTime>03/01/2012 14:40:48</publishTime>
     </File>
     <File Include="pictures/top.png">
       <publishTime>03/04/2012 05:47:44</publishTime>
-    </File>
-    <File Include="prisijungimo_duomenys.txt">
-      <publishTime>03/01/2012 14:40:58</publishTime>
     </File>
     <File Include="process.php">
       <publishTime>03/24/2014 17:37:32</publishTime>
