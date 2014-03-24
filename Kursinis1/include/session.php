@@ -215,7 +215,7 @@ class Session {
         /* Username error checking */
         $field = "id";  //Use field name for username
         if (!$sub_id || strlen($sub_id = trim($sub_id)) == 0) {
-            $form->setError($field, "* Vartotojas neįvestas");
+            $form->setError($field, "* Neįvestas numeris");
         } else {
             /* Spruce up username, check length */
             $sub_id = stripslashes($sub_id);
@@ -264,9 +264,9 @@ class Session {
             }
         }
         
-        $field = "last_ame"; 
+        $field = "last_name"; 
         if(!$sub_last || strlen($sub_last = trim($sub_last)) == 0){
-            $form->setError($field, "* Neįvestas vardas");
+            $form->setError($field, "* Neįvesta pavardė");
         }else{
             $sub_last = stripslashes($sub_last);
             if(!eregi("^([a-z])+$", $sub_last)){

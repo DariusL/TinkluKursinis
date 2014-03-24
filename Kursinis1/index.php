@@ -5,7 +5,7 @@ include("include/content.php");
 <html>
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=9; text/html; charset=utf-8" />
-    <title>Demo projektas</title>
+    <title>Įmonės personalo judėjimo stebėjimo IS</title>
     <link href="include/styles.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -17,7 +17,7 @@ include("include/content.php");
                 </div>
             </td>
         </tr>
-        <tr>
+        <tr> 
             <td>    
                 <?
                 //Jei vartotojas prisijungęs
