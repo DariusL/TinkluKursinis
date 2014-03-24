@@ -1,2 +1,0 @@
-Vartotojai: Administratorius, Valdytojas, Vartotojas
-Visu slaptazodziai tie patys: demo

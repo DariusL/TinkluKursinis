@@ -45,9 +45,7 @@
   <ItemGroup>
     <Content Include="include\.htaccess" />
     <Content Include="include\styles.css" />
-    <Content Include="naujienos.txt" />
     <Content Include="pictures\.htaccess" />
     <Content Include="pictures\top.png" />
-    <Content Include="prisijungimo_duomenys.txt" />
   </ItemGroup>
 </Project>

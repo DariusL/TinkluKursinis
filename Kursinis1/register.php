@@ -1,4 +1,4 @@
-<?
+﻿<?
 include("include/session.php");
 if ($session->logged_in) {
     header("Location: index.php");

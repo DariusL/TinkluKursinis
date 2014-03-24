@@ -1,4 +1,4 @@
-<?
+﻿<?
 include("include/session.php");
 include("include/content.php");
 ?>
@@ -18,7 +18,7 @@ include("include/content.php");
             </td>
         </tr>
         <tr>
-            <td>
+            <td>    
                 <?
                 //Jei vartotojas prisijungęs
                 if ($session->logged_in) {
