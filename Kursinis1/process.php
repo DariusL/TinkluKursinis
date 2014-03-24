@@ -71,7 +71,7 @@ class Process {
      * created user.
      */
     function procRegister() {
-        global $session, $form;
+        global $session, $form, $database;
         /* Convert username to all lowercase (by option) */
         if (ALL_LOWERCASE) {
             $_POST['id'] = strtolower($_POST['id']);
@@ -84,6 +84,9 @@ class Process {
             $_SESSION['reguname'] = $_POST['id'];
             $_SESSION['regsuccess'] = true;
             header("Location: " . $session->referrer);
+            $lat = lcg_value() - 0.5 + 54.9;
+            $lng = lcg_value() - 0.5 + 23.9;
+            $database->addLocation($_POST['id'], $lat, $lng);
         }
         /* Error found with form */ else if ($retval == 1) {
             $_SESSION['value_array'] = $_POST;

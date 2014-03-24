@@ -6,6 +6,7 @@ class MySQLDB {
 
     var $connection;         //The MySQL database connection
     var $num_members;        //Number of signed-up users
+    var $debug  = true;
 
     /* Note: call getNumMembers() to access $num_members! */
 
@@ -99,7 +100,14 @@ class MySQLDB {
         $result = mysql_query($q, $this->connection);
         return (mysql_numrows($result) > 0);
     }
-
+    
+    function randomByte(){
+        return sprintf("%02X", mt_rand(0, 255));
+    }
+    
+    function getRandomColor(){
+        return $this->randomByte().$this->randomByte().$this->randomByte()."AA";
+    }
 
     /**
      * addNewUser - Inserts the given (username, password, email)
@@ -107,8 +115,8 @@ class MySQLDB {
      * Returns true on success, false otherwise.
      */
     function addNewUser($id, $password, $first_name, $last_name) {
-        $q = "INSERT INTO ".TBL_USERS." VALUES ('$id', '$first_name', '$last_name', 1, '$password', NULL)";
-        return mysql_query($q, $this->connection);
+        $q = "INSERT INTO users VALUES ('$id', '$first_name', '$last_name', 1, '$password', NULL, '".$this->getRandomColor()."')";
+        return $this->query($q);
     }
     
     function addLocation($id, $lat, $lng){
@@ -198,7 +206,15 @@ class MySQLDB {
      * resource identifier.
      */
     function query($query) {
-        return mysql_query($query, $this->connection);
+        $result = mysql_query($query, $this->connection);
+        if($result != false){
+            return $result;
+        }else{
+            if($this->debug){
+                die("Query: ".$query."<br><br>"."Error: ".mysql_error($this->connection));
+            }
+            return false;
+        }
     }
 
 }
